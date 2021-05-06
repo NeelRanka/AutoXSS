@@ -11,10 +11,10 @@ Requirments : Pip Modules
     urllib.parse
     requests
     argparse
-    time
-    
+    time 
     
 Usage:
+	
 	#Make the Python Script Executable
 	chmod +x AutoXSS
 	
