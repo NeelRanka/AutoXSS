@@ -12,6 +12,8 @@ Requirments : Pip Modules
     requests
     argparse
     time 
+    selenium (for dynamic pages)
+    collections (for deque)
     
 Usage:
 	
@@ -30,4 +32,5 @@ Usage:
 		
 		#Recursive Scanning with Custom Depth
 		./AutoXSS -U <URL> -R -d <depth>
+		
     
