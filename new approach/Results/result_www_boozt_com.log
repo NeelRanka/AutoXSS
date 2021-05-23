@@ -1,0 +1,30 @@
+URL : http://www.boozt.com/eu/en/search
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.boozt.com/eu/en/newsletter
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.boozt.com/r/login
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+

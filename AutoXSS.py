@@ -16,31 +16,44 @@ parser = argparse.ArgumentParser(description = "Reflected XSS Scanner Tool",
 								 epilog="eg=> ./AutoXSS -U <URL>"
 								 )
  
-# Adding optional argument
-parser.add_argument("-U", "--Url", help = "URL to Test On", required=True, type=str)
-parser.add_argument("-F", "--File", help = "Paylods File path", type=str)
+# Adding URL Arguments
+URLGroup = parser.add_mutually_exclusive_group(required=True)
+URLGroup.add_argument("-U", "--Url", help = "URL to Test On", type=str)
+URLGroup.add_argument("-UF", "--URLFile", help="file input for multiple URL")
+
+
+#adding Payload Args
+parser.add_argument("-PF", "--PayloadFile", help = "Paylods File path", type=str)
+
+#adding Completeness/Recursive Arguments
 parser.add_argument("-R", "--Recursive", help="to execute ith script Recursively on the Website", action="store_true")
 parser.add_argument("-d", "--depth", help="depth of Recursion", type=int)
 
 # Read arguments from command line
 args = parser.parse_args()
 
-if args.Url:
-	#print("Url Entered : % s" % args.Url)
-	BaseUrl = args.Url
+
+BaseUrls=[]
+if args.URLFile:
+	#print("Url Entered : % s" % args.Url)	
+	with open(args.URLFile,"r") as file:
+		for line in file:
+			BaseUrls.append(line.strip("\n"))
+	#print(BaseUrls)
+elif args.Url:
+	BaseUrls = args.Url.split()
+	#print(BaseUrls)
 else:
 	print("No Args Passwd for URL")
 	print("Use -h flag for detailed Help ")
 	exit(0)
 
-if args.File:
+if args.PayloadFile:
 	try:
-		file = open(args.File,"r")
-		for line in file:
-			line = line.strip("\n")
-			if line!="":
-				payloads.append(line)
-		file.close()
+		with open(args.PayloadFile,"r") as file:
+			for line in file:
+				payloads.append(line.strip("\n"))
+
 	except FileNotFoundError:
 		print("No Such File Found")
 		print("QUITTING!!")
@@ -58,10 +71,9 @@ if args.Recursive:
 else:
 	print("**Recursive Flag not Set**")
 	print("Thus only scanning the provided URL excluding the Internal Links")
-#input Argument Parsing
-#---------------------------------------------------------------------------------------
 
-#take payload input from file
+#Completed input Argument Parsing
+#---------------------------------------------------------------------------------------
 
 #defining the Payloads if not entered by the user
 if payloads == []:
@@ -146,6 +158,7 @@ def create_data(inputs, payload):
 			data[input_tag['name']] = input_tag['value']
 		elif input_tag['type'] != 'submit':
 			data[input_tag['name']] = payload
+	#print("inputting payload",data)
 	return(data)
 
 
@@ -176,7 +189,7 @@ def CheckXSS(BaseUrl,depth):
 
 	forms,links = get_all_forms(BaseUrl)    #links has a list of websote Links found on that site
 	if forms==None and links==None:
-		print("Error with the Provided URL (TRY changing Protocol http/https ) ")
+		print("Error with the Provided URL (Not Reachable) (TRY changing Protocol http/https ) ")
 		return()
 
 	#for i in links:
@@ -188,16 +201,10 @@ def CheckXSS(BaseUrl,depth):
 		form_details = get_form_details(form)
 		all_forms.append(form_details)
 
-	#input("----------------------------------------------------------------------------------------")
-
-	#for form in all_forms:
-	#	print(form,end='\n\n')
-	#input()
-	#print("------------------Testing URL : ",BaseUrl,"------------------")
 	print("\nChecking link ",BaseUrl)
 	try:
 		for form in all_forms:
-			if "action" in form or "method" in form or "input" in form:
+			if "action" in form and "method" in form and "inputs" in form:
 				action = form['action']    #check if the action has the BaseUrl
 				method = form['method']
 				inputs = form['inputs']
@@ -219,15 +226,21 @@ def CheckXSS(BaseUrl,depth):
 			success=[]
 			fail=[]
 			for payload in payloads:
+				#print("creating payload")
 				data = create_data(inputs, payload)
-
+				#print("created payloads")
 				#create Data for the Form/Query string
 
 				if form['method'] == 'get':
+					#print("sent get req")
 					resp = requests.get(url, params=data)
+					#print("received get resp")
 				elif form['method'] == 'post':
+					#print("sent post req")
 					resp = requests.post(url, data=data)
+					#print("received post req")
 
+				#print("Payload created")
 
 				if payload in resp.text:
 					print("\t",url,"\t[+] Success with payload ", payload)
@@ -251,17 +264,22 @@ def CheckXSS(BaseUrl,depth):
 		file.close()
 		exit(0)
 	except:
+		print("out due to exception")
 		return()
 
 
 print("\n\nTHIS IS A TOOL AND IT IS RECOMMENDED TO PERFORM MANUAL TESTING FOR VERIFICATION\n\n")
 sleep(2)
 
-file = open("result_"+BaseUrl.replace(".","_").split("/")[-1]+".log","w")
+
 visited={}
+
 #BaseUrl = "http://mescoepune.org"    #issue with dynamic website
-CheckXSS(BaseUrl,1)
-file.close()
+for BaseUrl in BaseUrls:
+	print("\t******",BaseUrl,"*******")
+	file = open("./Results/result_"+BaseUrl.replace(".","_").split("/")[-1]+".log","w")
+	CheckXSS(BaseUrl,1)
+	file.close()
 
 #_________________________________________________________________________________________
 #completed the naive approach

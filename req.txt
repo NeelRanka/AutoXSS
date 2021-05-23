@@ -1,0 +1,8 @@
+bs4
+requests_html
+urllib
+requests
+argparse
+time
+selenium
+collections->deque

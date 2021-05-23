@@ -1,0 +1,300 @@
+URL : http://www.vcacs.ac.in/
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/login.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/sitemap.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/index.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/chirmanviwe.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/abouttrust.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/bba(ib).aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/msc(ca).aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/mcom.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/ac_commerce.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/ac_computer.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/ac_jrcollege.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/ac_nontechstaff.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/syllabus.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/alumni.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/jrfeedback.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/feedback.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/iqac.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/iqacnew.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/mou.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/xiiadmission.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/xiadmissioncom.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/bcomadmission.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/bbacaadmission.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/bbaadmission.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/bbaibadmission.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/bscadmission.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/mscadmission.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/mcaadmission.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+URL : http://www.vcacs.ac.in/mcomadmission.aspx
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+------------------------------------------------------------------------------------------------------------------------
+
+
