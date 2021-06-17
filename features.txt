@@ -1,0 +1,13 @@
+1. Single URl attack (-U <URL>)
+2. Multiple URLs from a file for attack ( -UF <file Path>)
+3. default payload built in the script
+4. Custom payload file can be specified ( -PF <file path> )
+
+5. Completeness of the scan => Recursive mode  ( only checks for Internal Links )
+6. Depth limit for Recursive Mode can be specified ( -d <number> )
+7. Recursive Mode nature depending on the depth specified 
+	depth <=3 : BFS method scan
+	depth > 3 : DFS method scan
+
+8. Dynamic website scan available using Selenium for both DFS and BFS approach.
+9. Complete reslt of the scan in a Text file for he specific URL.

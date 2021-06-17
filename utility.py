@@ -4,8 +4,7 @@ from urllib.parse import urljoin
 
 session = HTMLSession()
 
-#create a function isFile()
-# to check if it is a file or a URL
+
 files = ["pdf","pptx","xlsx","jpg","png","jpeg"]
 def isFile(href):
 	global files
@@ -19,8 +18,7 @@ def isFile(href):
 	return(False)
 
 
-#fetch all the forms from the Given URL If Valid
-def get_all_forms_and_links(url):
+def fetchFormAndLinksStatic(url):
 	#print(url)
 	try:
 		resp = session.get(url)
@@ -31,6 +29,31 @@ def get_all_forms_and_links(url):
 	
 	formSoup = BeautifulSoup(resp.html.html, "html.parser")
 	linkSoup = BeautifulSoup(resp.text, 'html.parser')
+
+	return( parseHTML(formSoup, linkSoup, url) )
+
+
+def fetchFormAndLinksDynamic(driver, url):
+	#print(url)
+	try:
+		driver.get(url)
+		resp = driver.page_source
+
+	except KeyboardInterrupt:
+		exit(0)
+	except:
+		return(None,None)
+	
+	formSoup = BeautifulSoup(resp, "html.parser")
+	linkSoup = BeautifulSoup(resp,'html.parser')
+
+	return( parseHTML(formSoup, linkSoup, url) )
+
+
+
+
+#fetch all the forms from the Given URL If Valid
+def parseHTML(formSoup, linkSoup, url):
 	urls=[]
 	UrlLength = len(url)
 	for links in linkSoup.find_all('a'):
@@ -42,6 +65,7 @@ def get_all_forms_and_links(url):
 		if url == href[:UrlLength] and url != href:
 			if isFile(href):
 				continue
+			#check if it is a link for a GET request??  eg abc.com/search.php?q=searchString   => if yes then parse it accordingly
 
 			#if not a file then 
 			urls.append(href)    #href is a complete link with domain name, route and extension if present
