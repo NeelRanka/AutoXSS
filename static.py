@@ -1,17 +1,22 @@
 from collections import deque
 from urllib.parse import urljoin
 from utility import *
-from input import payloads,Recursive,MaxDepth
+from input import payloads,Recursive,MaxDepth,Verbose
 import requests
 
 visited={}
 currentDomainLinks = deque([])
 file = None
+totalInjections=0
+totalInjectionPoints=0
+successfulInjections=0
+failedInjections=0
+
 
 def CheckXSS(BaseUrl,depth,DFS):
-	global visited,file
+	global visited,file,totalInjectionCount
 	if depth>=MaxDepth :  #already visited Url or greater than MaxDepth
-		print("reached max depth")
+		#print("reached max depth")
 		return()
 
 	visited[BaseUrl] = 1
@@ -25,12 +30,21 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 	for i, form in enumerate(forms, start=1):
 		form_details = get_form_details(form)
-		all_forms.append(form_details)
+		if form_details!={}:
+			all_forms.append(form_details)
 
 		
 	#print("------------------Testing URL : ",BaseUrl,"------------------")
-	print("\nChecking link ",BaseUrl)
+	if len(all_forms) <= 0:
+		return()
+		
+	if Verbose:
+		print("\nChecking link ",BaseUrl, "with forms : ")
+		for form in all_forms:
+			if "action" in form:
+				print("\t",form["action"])
 	#input(all_forms)
+	
 	try:
 		for form in all_forms:
 			#print("Checking forms",form)
@@ -52,7 +66,9 @@ def CheckXSS(BaseUrl,depth,DFS):
 			else:
 				visited[url] = 1
 
-			print("==> ",url)
+			print("\n==> ",url)
+			global totalInjections,successfulInjections,failedInjections,totalInjectionPoints
+			totalInjectionPoints+=1
 			success=[]
 			fail=[]
 			for payload in payloads:
@@ -60,7 +76,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 				data = create_data(inputs, payload)
 
 				#create Data for the Form/Query string
-
+				totalInjections+=1
 				if form['method'] == 'get':
 					resp = requests.get(url, params=data)
 				elif form['method'] == 'post':
@@ -69,9 +85,11 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 				if payload in resp.text:
 					print("\t",url,"\t[+] Success with payload ", payload)
+					successfulInjections+=1
 					success.append(payload)
 				else:
 					print("\t",url,"\tFailure")
+					failedInjections+=1
 					fail.append(payload)
 					#print(resp.text)
 
@@ -118,6 +136,8 @@ def BFS_Static(BaseUrls,payloads,specifiedDepth):
 				if Url not in visited:
 					CheckXSS(Url,depth,False)
 				
+		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
+		print("Logging Complete")
 		#print("Exiting while loop ",counter,len(currentDomainLinks))
 		file.close()
 
@@ -130,5 +150,7 @@ def DFS_Static(BaseUrls, payloads,specifiedDepth):
 		print("\t******",BaseUrl,"*******")
 		file = open("./Results/result_"+BaseUrl.replace(".","_").split("/")[-1]+".log","w")
 		CheckXSS(BaseUrl,1,True)
+		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
+		print("Logging Complete")
 		file.close()
 

@@ -17,12 +17,17 @@ parser.add_argument("-PF", "--PayloadFile", help = "Paylods File path", type=str
 #adding Completeness/Recursive Arguments
 parser.add_argument("-R", "--Recursive", help="to execute ith script Recursively on the Website", action="store_true")
 parser.add_argument("-d", "--depth", help="depth of Recursion", type=int)
+parser.add_argument("-v", "--Verbose", help="to show Verbose Output", action="store_true")
+parser.add_argument("--dynamic", help="to use the Dynamic approach for testing Dynamic Web Pages", action="store_true")
 
 # Read arguments from command line
 args = parser.parse_args()
 
 MaxDepth=3
 Recursive=False
+Verbose=False
+dynamicApproach=False
+
 BaseUrls=[]
 payloads=[]
 if args.URLFile:
@@ -68,6 +73,12 @@ if args.Recursive:
 else:
 	print("**Recursive Flag not Set**")
 	print("Thus only scanning the provided URL excluding the Internal Links")
+
+if args.Verbose:
+	Verbose = True
+
+if args.dynamic:
+	dynamicApproach=True
 #input Argument Parsing
 #---------------------------------------------------------------------------------------
 

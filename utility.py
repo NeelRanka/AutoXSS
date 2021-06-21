@@ -117,5 +117,26 @@ def log(url,success,fail,file):
 		for element in fail:
 			file.write("\t\t"+element+"\n")
 	
-	file.write("\n------------------------------------------------------------------------------------------------------------------------\n\n\n")
+	file.write("\n\t\t\t---------------------------------------------------------------\n\n")
 
+
+
+def UrlToDomain(url):
+	from tld import get_fld
+	domain_name = url
+	try:
+		domain_name = get_fld(url)
+	except:
+		pass
+	#print('-------------------------------------')
+	#print("Domain Name is: "+domain_name)
+	return(domain_name)
+
+
+def logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints):
+	file.write("Domain : "+UrlToDomain(BaseUrl)+"\n")
+	file.write("Total Injection Points : "+ str(totalInjectionPoints)+"\n")
+	file.write("Total Injections Attempted : "+str(totalInjections)+"\n")
+	file.write("Successful Injections : "+str(successfulInjections)+"\n")
+	file.write("Failed Injections : "+str(failedInjections)+"\n")
+	file.write("\n--------------------------------------------------------------------------------------------------------------------\n\n")

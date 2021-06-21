@@ -3,19 +3,22 @@ from selenium.webdriver.common.keys import Keys
 from collections import deque
 from urllib.parse import urljoin
 from utility import *
-from input import payloads,Recursive,MaxDepth
+from input import payloads,Recursive,MaxDepth,Verbose
 import requests
 
 visited={}
 currentDomainLinks = deque([])
 driver=None
 file=None
-
+totalInjections=0
+totalInjectionPoints=0
+successfulInjections=0
+failedInjections=0
 
 def CheckXSS(BaseUrl,depth,DFS):
 	global visited,driver
 	if depth>=MaxDepth :  #already visited Url or greater than MaxDepth
-		print("reached max depth")
+		#print("reached max depth")
 		return()
 
 	visited[BaseUrl] = 1
@@ -29,11 +32,19 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 	for i, form in enumerate(forms, start=1):
 		form_details = get_form_details(form)
-		all_forms.append(form_details)
+		if form_details!={}:
+			all_forms.append(form_details)
 
 		
 	#print("------------------Testing URL : ",BaseUrl,"------------------")
-	print("\nChecking link ",BaseUrl)
+	if len(all_forms) <=0:
+		return()
+
+	if Verbose:
+		print("\nChecking link ",BaseUrl, "with forms : ")
+		for form in all_forms:
+			if "action" in form:
+				print("\t",form["action"])
 	#input(all_forms)
 	try:
 		for form in all_forms:
@@ -56,7 +67,9 @@ def CheckXSS(BaseUrl,depth,DFS):
 			else:
 				visited[url] = 1
 
-			print("==> ",url)
+			print("\n==> ",url)
+			global totalInjections,successfulInjections,failedInjections,totalInjectionPoints
+			totalInjectionPoints+=1
 			success=[]
 			fail=[]
 			for payload in payloads:
@@ -64,7 +77,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 				data = create_data(inputs, payload)
 
 				#create Data for the Form/Query string
-
+				totalInjections+=1
 				if form['method'] == 'get':
 					resp = requests.get(url, params=data)
 				elif form['method'] == 'post':
@@ -74,9 +87,11 @@ def CheckXSS(BaseUrl,depth,DFS):
 				if payload in resp.text:
 					print("\t",url,"\t[+] Success with payload ", payload)
 					success.append(payload)
+					successfulInjections+=1
 				else:
 					print("\t",url,"\tFailure")
 					fail.append(payload)
+					failedInjections+=1
 					#print(resp.text)
 
 				#append to log file
@@ -113,6 +128,8 @@ def BFS_Dynamic(BaseUrls,payloads,specifiedDepth):
 		print("\t******",BaseUrl,"*******")
 		file = open("./Results/result_"+BaseUrl.replace(".","_").split("/")[-1]+".log","w")
 		
+		
+
 		currentDomainLinks = deque([([BaseUrl],0)]) #=> tuple(list_Of_Urls, depth)
 		
 		counter=0
@@ -126,6 +143,11 @@ def BFS_Dynamic(BaseUrls,payloads,specifiedDepth):
 				if Url not in visited:
 					CheckXSS(Url,depth,False)
 		
+		
+		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
+		if totalInjectionPoints == 0 or totalInjections == 0:
+			print("Sorry, Nothing Found ")
+		print("Logging Complete")
 		file.close()
 		driver.close()
 
@@ -140,6 +162,12 @@ def DFS_Dynamic(BaseUrls, payloads,specifiedDepth):
 		driver = webdriver.Chrome('./chromedriver')
 		print("\t******",BaseUrl,"*******")
 		file = open("./Results/result_"+BaseUrl.replace(".","_").split("/")[-1]+".log","w")
+		
+		
 		CheckXSS(BaseUrl,1,True)
+		
+
+		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
+		print("Logging Complete")
 		driver.close()
 		file.close()

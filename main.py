@@ -1,4 +1,4 @@
-from input import BaseUrls,payloads,Recursive,MaxDepth
+from input import BaseUrls,payloads,Recursive,MaxDepth,Verbose,dynamicApproach
 
 
 #from BFSApproach import BFS_Static   #level wise approach
@@ -11,8 +11,16 @@ from dynamic import BFS_Dynamic, DFS_Dynamic
 if MaxDepth <=3 :
 	print("Using the BFS approach for depth is <=3")
 	#option for Static or Dynamic
-	BFS_Dynamic(BaseUrls,payloads,MaxDepth)
+	if dynamicApproach:
+		BFS_Dynamic(BaseUrls,payloads,MaxDepth)
+
+	BFS_Static(BaseUrls,payloads,MaxDepth)
+	
 else:
 	print("Using the DFS approach")
 	#option for Static or Dynamic
-	DFS_Dynamic(BaseUrls,payloads,MaxDepth)
+	if dynamicApproach:
+		DFS_Dynamic(BaseUrls,payloads,MaxDepth)
+
+	DFS_Static(BaseUrls,payloads,MaxDepth)
+	
