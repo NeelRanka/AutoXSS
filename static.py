@@ -37,7 +37,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 	#print("------------------Testing URL : ",BaseUrl,"------------------")
 	if len(all_forms) <= 0:
 		return()
-		
+
 	if Verbose:
 		print("\nChecking link ",BaseUrl, "with forms : ")
 		for form in all_forms:
@@ -109,6 +109,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 	except KeyboardInterrupt:
 		print("\nLet me Log First\nQUITTING!")
 		log(url,success,fail,file)
+		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
 		file.close()
 		exit(0)
 	except Exception as e:
@@ -116,41 +117,56 @@ def CheckXSS(BaseUrl,depth,DFS):
 		return()
 
 
-
-def BFS_Static(BaseUrls,payloads,specifiedDepth):
-	global currentDomainLinks, MaxDepth, file
-	MaxDepth = specifiedDepth
-	#static page
-	for BaseUrl in BaseUrls:  #from the list of input domain Names/s
-		file = open("./Results/result_"+BaseUrl.replace(".","_").split("/")[-1]+".log","w")
-		currentDomainLinks = deque([([BaseUrl],0)]) #=> tuple(list_Of_Urls, depth)
-		
-		counter=0
-		while counter < len(currentDomainLinks):
-			#print("=>",currentDomainLinks[counter])
-			Urls = currentDomainLinks[counter][0] 
-			depth = currentDomainLinks[counter][1]
-			counter+=1
+def BFS_Static(BaseUrl):
+	global currentDomainLinks
+	
+	currentDomainLinks = deque([([BaseUrl],0)]) #=> tuple(list_Of_Urls, depth)	
+	counter=0
+	while counter < len(currentDomainLinks):
+		#print("=>",currentDomainLinks[counter])
+		Urls = currentDomainLinks[counter][0] 
+		depth = currentDomainLinks[counter][1]
+		counter+=1
 			
-			for Url in Urls:
-				if Url not in visited:
-					CheckXSS(Url,depth,False)
-				
-		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
-		print("Logging Complete")
-		#print("Exiting while loop ",counter,len(currentDomainLinks))
-		file.close()
+		for Url in Urls:
+			if Url not in visited:
+				CheckXSS(Url,depth,False)
 
 
+def DFS_Static(BaseUrl):
+	CheckXSS(BaseUrl,1,True)
+	
 
-def DFS_Static(BaseUrls, payloads,specifiedDepth):
+def staticWrapper(BaseUrls, payloads, specifiedDepth, DFS):
 	global MaxDepth,file
 	MaxDepth = specifiedDepth
 	for BaseUrl in BaseUrls:
 		print("\t******",BaseUrl,"*******")
 		file = open("./Results/result_"+BaseUrl.replace(".","_").split("/")[-1]+".log","w")
-		CheckXSS(BaseUrl,1,True)
+		
+		try:
+			if DFS:
+				DFS_Static(BaseUrl)
+			else:
+				BFS_Static(BaseUrl)
+		except KeyboardInterrupt:
+			print("\nLet me Log First\nQUITTING!")
+			log(url,success,fail,file)
+			logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
+			file.close()
+		except Exception as e:
+			print("Some error occured ",e)
+			exit(0)
+
 		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
+		
+		if totalInjectionPoints == 0 or totalInjections == 0:
+			print("Sorry, Nothing Found ")
+
+		totalInjections=0
+		totalInjectionPoints=0
+		successfulInjections=0
+		failedInjections=0
+
 		print("Logging Complete")
 		file.close()
-

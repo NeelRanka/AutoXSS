@@ -106,10 +106,10 @@ def CheckXSS(BaseUrl,depth,DFS):
 				global currentDomainLinks
 				currentDomainLinks.append(  ( links, depth+1 )  ) #modify to append only non visited links
 
-
 	except KeyboardInterrupt:
 		print("\nLet me Log First\nQUITTING!")
 		log(url,success,fail,file)
+		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
 		file.close()
 		exit(0)
 	except Exception as e:
@@ -117,45 +117,27 @@ def CheckXSS(BaseUrl,depth,DFS):
 		return()
 
 
-
-def BFS_Dynamic(BaseUrls,payloads,specifiedDepth):
-
-	global currentDomainLinks, MaxDepth, driver, file
-	MaxDepth = specifiedDepth
-
-	for BaseUrl in BaseUrls:
-		driver = webdriver.Chrome('./chromedriver') 
-		print("\t******",BaseUrl,"*******")
-		file = open("./Results/result_"+BaseUrl.replace(".","_").split("/")[-1]+".log","w")
+def BFS_Dynamic(BaseUrl):
+	global currentDomainLinks
+	currentDomainLinks = deque([([BaseUrl],0)]) #=> tuple(list_Of_Urls, depth)
 		
-		
-
-		currentDomainLinks = deque([([BaseUrl],0)]) #=> tuple(list_Of_Urls, depth)
-		
-		counter=0
-		while counter < len(currentDomainLinks):
-			#print("=>",currentDomainLinks[counter])
-			Urls = currentDomainLinks[counter][0] 
-			depth = currentDomainLinks[counter][1]
-			counter+=1
+	counter=0
+	while counter < len(currentDomainLinks):
+		#print("=>",currentDomainLinks[counter])
+		Urls = currentDomainLinks[counter][0] 
+		depth = currentDomainLinks[counter][1]
+		counter+=1
 			
-			for Url in Urls:
-				if Url not in visited:
-					CheckXSS(Url,depth,False)
+		for Url in Urls:
+			if Url not in visited:
+				CheckXSS(Url,depth,False)
 		
-		
-		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
-		if totalInjectionPoints == 0 or totalInjections == 0:
-			print("Sorry, Nothing Found ")
-		print("Logging Complete")
-		file.close()
-		driver.close()
+
+def DFS_Dynamic(BaseUrl):
+		CheckXSS(BaseUrl,1,True)
 
 
-
-
-def DFS_Dynamic(BaseUrls, payloads,specifiedDepth):
-
+def dynamicWrapper(BaseUrls, payloads, specifiedDepth, DFS):
 	global MaxDepth, driver, file  #just to share the data between functions
 	MaxDepth = specifiedDepth
 	for BaseUrl in BaseUrls:
@@ -163,11 +145,33 @@ def DFS_Dynamic(BaseUrls, payloads,specifiedDepth):
 		print("\t******",BaseUrl,"*******")
 		file = open("./Results/result_"+BaseUrl.replace(".","_").split("/")[-1]+".log","w")
 		
-		
-		CheckXSS(BaseUrl,1,True)
-		
+		try:
+			if DFS:
+				DFS_Dynamic(BaseUrl)
+			else:
+				BFS_Dynamic(BaseUrl)
+		except KeyboardInterrupt:
+			print("\nLet me Log First\nQUITTING!")
+			log(url,success,fail,file)
+			logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
+			driver.close()
+			file.close()
+		except Exception as e:
+			print("Error Occured (Trying to Log) \n\n Error : ",e)
+			driver.close()
+			file.close()
+			exit(0)
 
 		logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints)
+
+		if totalInjectionPoints == 0 or totalInjections == 0:
+			print("Sorry, Nothing Found ")
+		
+		totalInjections=0
+		totalInjectionPoints=0
+		successfulInjections=0
+		failedInjections=0
+
 		print("Logging Complete")
-		driver.close()
 		file.close()
+		driver.close()
