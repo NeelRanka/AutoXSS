@@ -35,9 +35,6 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 		
 	#print("------------------Testing URL : ",BaseUrl,"------------------")
-	if len(all_forms) <= 0:
-		return()
-
 	if Verbose:
 		print("\nChecking link ",BaseUrl, "with forms : ")
 		for form in all_forms:
@@ -84,11 +81,11 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 
 				if payload in resp.text:
-					print("\t",url,"\t[+] Success with payload ", payload)
+					printGreen("\t"+url+"\t[+] Success with payload "+ payload)
 					successfulInjections+=1
 					success.append(payload)
 				else:
-					print("\t",url,"\tFailure")
+					printRed("\t "+url+" \tFailure" + payload)
 					failedInjections+=1
 					fail.append(payload)
 					#print(resp.text)
@@ -138,7 +135,7 @@ def DFS_Static(BaseUrl):
 	
 
 def staticWrapper(BaseUrls, payloads, specifiedDepth, DFS):
-	global MaxDepth,file
+	global MaxDepth,file,totalInjections,totalInjectionPoints,successfulInjections,failedInjections
 	MaxDepth = specifiedDepth
 	for BaseUrl in BaseUrls:
 		print("\t******",BaseUrl,"*******")

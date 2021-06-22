@@ -37,9 +37,6 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 		
 	#print("------------------Testing URL : ",BaseUrl,"------------------")
-	if len(all_forms) <=0:
-		return()
-
 	if Verbose:
 		print("\nChecking link ",BaseUrl, "with forms : ")
 		for form in all_forms:
@@ -85,11 +82,11 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 
 				if payload in resp.text:
-					print("\t",url,"\t[+] Success with payload ", payload)
+					printGreen("\t",url,"\t[+] Success with payload ", payload)
 					success.append(payload)
 					successfulInjections+=1
 				else:
-					print("\t",url,"\tFailure")
+					printRed("\t",url,"\tFailure")
 					fail.append(payload)
 					failedInjections+=1
 					#print(resp.text)

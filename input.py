@@ -1,4 +1,5 @@
 import requests,argparse
+from utility import UrlToDomain
 from time import sleep
 
 parser = argparse.ArgumentParser(description = "Reflected XSS Scanner Tool",
@@ -30,11 +31,14 @@ dynamicApproach=False
 
 BaseUrls=[]
 payloads=[]
+
 if args.URLFile:
 	try:	
 		with open(args.URLFile,"r") as file:
 			for line in file:
-				BaseUrls.append(line.strip("\n"))
+				if line != "\n" and line != "":
+					#print(" '"+line.strip("\n")+"'")
+					BaseUrls.append("http://"+UrlToDomain(line.strip("\n")))
 	except FileNotFoundError:
 		print("File not found ")
 		exit(0)
@@ -43,12 +47,16 @@ if args.URLFile:
 		exit(0)
 	#print(BaseUrls)
 elif args.Url:
-	BaseUrls = args.Url.split()
+	if args.Url == UrlToDomain(args.Url):
+		Url = "http://"+args.Url
+	BaseUrls = Url.split()
 	#print(BaseUrls)
 else:
 	print("No Args Passwd for URL")
 	print("Use -h flag for detailed Help ")
 	exit(0)
+
+
 
 if args.PayloadFile:
 	try:
@@ -64,6 +72,7 @@ if args.PayloadFile:
 		print("some error occured")
 		exit(0)
 
+
 if args.Recursive:
 	print("Recursive Approach")
 	Recursive = True
@@ -74,8 +83,12 @@ else:
 	print("**Recursive Flag not Set**")
 	print("Thus only scanning the provided URL excluding the Internal Links")
 
+
+
 if args.Verbose:
 	Verbose = True
+
+
 
 if args.dynamic:
 	dynamicApproach=True

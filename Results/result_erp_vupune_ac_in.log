@@ -1,0 +1,17 @@
+URL : http://erp.vupune.ac.in/
+
+
+	Failures
+		<script>alert(1);</script>
+		<script>alert(document.cookie);</script>
+
+			---------------------------------------------------------------
+
+Domain : vupune.ac.in
+Total Injection Points : 1
+Total Injections Attempted : 2
+Successful Injections : 0
+Failed Injections : 2
+
+--------------------------------------------------------------------------------------------------------------------
+

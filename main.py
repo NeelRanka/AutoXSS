@@ -9,7 +9,7 @@ from dynamic import dynamicWrapper
 
 
 if MaxDepth <=3 :
-	print("Using the BFS approach for depth is <=3")
+	print("Using the Level Wise Approach")
 	DFS=False
 
 	if dynamicApproach: #flag set by User

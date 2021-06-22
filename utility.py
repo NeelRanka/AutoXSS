@@ -4,6 +4,17 @@ from urllib.parse import urljoin
 
 session = HTMLSession()
 
+def UrlToDomain(url):
+	from tld import get_fld
+	domain_name = url
+	try:
+		domain_name = get_fld(url)
+	except:
+		pass
+	#print('-------------------------------------')
+	#print("Domain Name is: "+domain_name)
+	return(domain_name)
+
 
 files = ["pdf","pptx","xlsx","jpg","png","jpeg"]
 def isFile(href):
@@ -55,14 +66,16 @@ def fetchFormAndLinksDynamic(driver, url):
 #fetch all the forms from the Given URL If Valid
 def parseHTML(formSoup, linkSoup, url):
 	urls=[]
-	UrlLength = len(url)
+	#UrlLength = len(url)
+	originalDomain = UrlToDomain(url)
+	#print("Original Domain is : ",originalDomain)
 	for links in linkSoup.find_all('a'):
 		href = links.get('href')
 		if href == "" or href == None:
 			continue
-		href = urljoin(url,href)
+		href = urljoin(url,UrlToDomain(href))
 		#check for internal or external Link before adding to the list
-		if url == href[:UrlLength] and url != href:
+		if originalDomain == UrlToDomain(href) and url != href:
 			if isFile(href):
 				continue
 			#check if it is a link for a GET request??  eg abc.com/search.php?q=searchString   => if yes then parse it accordingly
@@ -120,19 +133,6 @@ def log(url,success,fail,file):
 	file.write("\n\t\t\t---------------------------------------------------------------\n\n")
 
 
-
-def UrlToDomain(url):
-	from tld import get_fld
-	domain_name = url
-	try:
-		domain_name = get_fld(url)
-	except:
-		pass
-	#print('-------------------------------------')
-	#print("Domain Name is: "+domain_name)
-	return(domain_name)
-
-
 def logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjections,totalInjectionPoints):
 	file.write("Domain : "+UrlToDomain(BaseUrl)+"\n")
 	file.write("Total Injection Points : "+ str(totalInjectionPoints)+"\n")
@@ -140,3 +140,10 @@ def logSummary(file,BaseUrl,totalInjections,successfulInjections,failedInjection
 	file.write("Successful Injections : "+str(successfulInjections)+"\n")
 	file.write("Failed Injections : "+str(failedInjections)+"\n")
 	file.write("\n--------------------------------------------------------------------------------------------------------------------\n\n")
+
+from termcolor import colored
+def printGreen(string):
+	print(colored(string, 'green'))
+
+def printRed(string):
+	print(colored(string, 'red'))
