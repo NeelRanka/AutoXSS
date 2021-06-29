@@ -8,8 +8,8 @@ parser = argparse.ArgumentParser(description = "Reflected XSS Scanner Tool",
  
 # Adding URL Arguments
 URLGroup = parser.add_mutually_exclusive_group(required=True)
-URLGroup.add_argument("-U", "--Url", help = "URL to Test On", type=str)
-URLGroup.add_argument("-UF", "--URLFile", help="file input for multiple URL")
+URLGroup.add_argument("-U", "--Url", help = "URL/Domain to Test On", type=str)
+URLGroup.add_argument("-UF", "--URLFile", help="file input for multiple URL/Domain")
 
 
 #adding Payload Args
