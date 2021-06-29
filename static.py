@@ -14,7 +14,7 @@ failedInjections=0
 
 
 def CheckXSS(BaseUrl,depth,DFS):
-	global visited,file,totalInjectionCount
+	global visited,file,totalInjectionPoints
 	if depth>=MaxDepth :  #already visited Url or greater than MaxDepth
 		#print("reached max depth")
 		return()

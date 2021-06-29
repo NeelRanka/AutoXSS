@@ -82,11 +82,11 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 
 				if payload in resp.text:
-					printGreen("\t",url,"\t[+] Success with payload ", payload)
+					printGreen("\t"+url+"\t[+] Success with payload "+ payload)
 					success.append(payload)
 					successfulInjections+=1
 				else:
-					printRed("\t",url,"\tFailure ",payload)
+					printRed("\t"+url+"\tFailure "+payload)
 					fail.append(payload)
 					failedInjections+=1
 					#print(resp.text)
@@ -136,6 +136,7 @@ def DFS_Dynamic(BaseUrl):
 
 def dynamicWrapper(BaseUrls, payloads, specifiedDepth, DFS):
 	global MaxDepth, driver, file  #just to share the data between functions
+	global totalInjections,successfulInjections,failedInjections,totalInjectionPoints
 	MaxDepth = specifiedDepth
 	for BaseUrl in BaseUrls:
 		driver = webdriver.Chrome('./chromedriver')
