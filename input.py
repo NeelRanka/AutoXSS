@@ -3,7 +3,7 @@ from utility import UrlToDomain
 from time import sleep
 
 parser = argparse.ArgumentParser(description = "Reflected XSS Scanner Tool",
-								 epilog="eg=> ./AutoXSS -U <URL>"
+								 epilog="eg=> ./AutoXSS [options]"
 								 )
  
 # Adding URL Arguments

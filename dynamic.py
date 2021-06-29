@@ -86,7 +86,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 					success.append(payload)
 					successfulInjections+=1
 				else:
-					printRed("\t",url,"\tFailure")
+					printRed("\t",url,"\tFailure ",payload)
 					fail.append(payload)
 					failedInjections+=1
 					#print(resp.text)

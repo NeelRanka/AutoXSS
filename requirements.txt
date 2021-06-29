@@ -1,4 +1,6 @@
-requests==2.22.0
-beautifulsoup4==4.9.3
 requests_html==0.10.0
+requests==2.22.0
 selenium==3.141.0
+beautifulsoup4==4.9.3
+termcolor==1.1.0
+tld==0.12.6
