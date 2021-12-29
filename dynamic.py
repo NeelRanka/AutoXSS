@@ -21,22 +21,13 @@ def CheckXSS(BaseUrl,depth,DFS):
 		#print("reached max depth")
 		return()
 
-	visited[BaseUrl] = 1
-
-	forms,links = fetchFormAndLinksDynamic(driver, BaseUrl)    #links has a list of websote Links found on that site
-	if forms==None and links==None:
+	all_forms,links = fetchFormAndLinksDynamic(BaseUrl)    #links has a list of websote Links found on that site
+	print(BaseUrl)
+	if len(all_forms)==0 and links==None:
 		print("Error with the Provided URL (Not Reachable) (TRY changing Protocol http/https ) => ",BaseUrl)
 		return()
 
-	all_forms=[]
-
-	for i, form in enumerate(forms, start=1):
-		form_details = get_form_details(form)
-		if form_details!={}:
-			all_forms.append(form_details)
-
 		
-	#print("------------------Testing URL : ",BaseUrl,"------------------")
 	if Verbose:
 		print("\nChecking link ",BaseUrl, "with forms : ")
 		for form in all_forms:
@@ -64,7 +55,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 			else:
 				visited[url] = 1
 
-			print("\n==> ",url)
+			print("\n==> ",url,form)
 			global totalInjections,successfulInjections,failedInjections,totalInjectionPoints
 			totalInjectionPoints+=1
 			success=[]
@@ -75,7 +66,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 				#create Data for the Form/Query string
 				totalInjections+=1
-				if form['method'] == 'get':
+				if form['method'] == 'get' or form['method'] == "" :
 					resp = requests.get(url, params=data)
 				elif form['method'] == 'post':
 					resp = requests.post(url, data=data)
@@ -94,7 +85,10 @@ def CheckXSS(BaseUrl,depth,DFS):
 				#append to log file
 			log(url,success,fail,file)
 
-			#checks if the Recursive flag is set or not
+		#all forms check completed
+		visited[BaseUrl] = 1
+
+		#checks if the Recursive flag is set or not
 		if Recursive:
 			if DFS:
 				for link in links:

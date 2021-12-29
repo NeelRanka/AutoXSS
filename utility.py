@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession
-from urllib.parse import urljoin
+from urllib.parse import urljoin,urlparse, parse_qsl
 
 session = HTMLSession()
 
@@ -14,6 +14,23 @@ def UrlToDomain(url):
 	#print('-------------------------------------')
 	#print("Domain Name is: "+domain_name)
 	return(domain_name)
+
+
+def isRequestType(link):
+	# print(link)
+	urlDetails = urlparse(link)
+	# print(urlDetails)
+	if urlDetails.query != "":
+		paramDetails = parse_qsl(urlDetails.query,keep_blank_values=True)
+		# print(paramDetails)
+		DS = {}
+		DS['action'] = urlDetails.path.strip("/")
+		DS['method'] = 'get'
+		DS['inputs'] = []
+		for param in paramDetails:
+			DS['inputs'].append( { 'type':"text", 'name':param[0], 'value':param[1] } )
+		return(True,DS)
+	return(False,None)
 
 
 files = ["pdf","pptx","xlsx","jpg","png","jpeg"]
@@ -66,6 +83,7 @@ def fetchFormAndLinksDynamic(driver, url):
 #fetch all the forms from the Given URL If Valid
 def parseHTML(formSoup, linkSoup, url):
 	urls=[]
+	all_forms=[]
 	#UrlLength = len(url)
 	originalDomain = UrlToDomain(url)
 	#print("Original Domain is : ",originalDomain)
@@ -79,11 +97,20 @@ def parseHTML(formSoup, linkSoup, url):
 			if isFile(href):
 				continue
 			#check if it is a link for a GET request??  eg abc.com/search.php?q=searchString   => if yes then parse it accordingly
-
+			flag, value = isRequestType(href)
+			if flag == True:
+				all_forms.append(value)
+				continue
 			#if not a file then 
 			urls.append(href)    #href is a complete link with domain name, route and extension if present
 
-	return(formSoup.find_all("form"),urls)
+	forms = formSoup.find_all("form")
+	for form in forms:
+		form_details = get_form_details(form)
+		if form_details!={}:
+			all_forms.append(form_details)
+	# print("all forms in parseHTML",all_forms)
+	return(all_forms, urls)
 
 
 #Create a Data Structure for storing the Form attributes

@@ -13,35 +13,33 @@ successfulInjections=0
 failedInjections=0
 
 
+# check MaxDepth
+# check if visited
+# find forms and links
+# insert payload
+# send request
+# check resp
+# make link as visited
+
 def CheckXSS(BaseUrl,depth,DFS):
 	global visited,file,totalInjectionPoints
 	if depth>=MaxDepth :  #already visited Url or greater than MaxDepth
 		#print("reached max depth")
 		return()
 
-	visited[BaseUrl] = 1
-
-	forms,links = fetchFormAndLinksStatic(BaseUrl)    #links has a list of websote Links found on that site
-	if forms==None and links==None:
+	#find all forms and make them in a proper DS all_forms = [{'action': 'search.php', 'method': 'get', 'inputs': [{'type': 'text', 'name': 'q', 'value': ''}]}]
+	all_forms,links = fetchFormAndLinksStatic(BaseUrl)    #links has a list of websote Links found on that site
+	print(BaseUrl)
+	if len(all_forms)==0 and links==None:
 		print("Error with the Provided URL (Not Reachable) (TRY changing Protocol http/https ) => ",BaseUrl)
 		return()
 
-	all_forms=[]
-
-	for i, form in enumerate(forms, start=1):
-		form_details = get_form_details(form)
-		if form_details!={}:
-			all_forms.append(form_details)
-
-		
-	#print("------------------Testing URL : ",BaseUrl,"------------------")
 	if Verbose:
 		print("\nChecking link ",BaseUrl, "with forms : ")
 		for form in all_forms:
 			if "action" in form:
-				print("\t",form["action"])
-	#input(all_forms)
-	
+				print("\t",form)
+
 	try:
 		for form in all_forms:
 			#print("Checking forms",form)
@@ -55,7 +53,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 				#input()
 				continue
 
-			#print("==>",BaseUrl,action)
+			# print("==> : ",BaseUrl,action)
 			url = urljoin(BaseUrl, action)
 			if url in visited:
 				#print("already visited this ",url)
@@ -63,7 +61,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 			else:
 				visited[url] = 1
 
-			print("\n==> ",url)
+			print("\n==> :",url,form)
 			global totalInjections,successfulInjections,failedInjections,totalInjectionPoints
 			totalInjectionPoints+=1
 			success=[]
@@ -74,7 +72,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 
 				#create Data for the Form/Query string
 				totalInjections+=1
-				if form['method'] == 'get':
+				if form['method'] == 'get' or form['method'] == "":
 					resp = requests.get(url, params=data)
 				elif form['method'] == 'post':
 					resp = requests.post(url, data=data)
@@ -93,7 +91,9 @@ def CheckXSS(BaseUrl,depth,DFS):
 				#append to log file
 			log(url,success,fail,file)
 
-			#checks if the Recursive flag is set or not
+		# all forms checked
+		visited[BaseUrl] = 1
+
 		if Recursive:
 			if DFS:
 				for link in links:
