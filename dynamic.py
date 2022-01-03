@@ -3,7 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from collections import deque
 from urllib.parse import urljoin
 from utility import *
-from input import payloads,Recursive,MaxDepth,Verbose
+from input import payloads,Recursive,MaxDepth,Verbose,headers
 import requests
 
 visited={}
@@ -47,7 +47,7 @@ def CheckXSS(BaseUrl,depth,DFS):
 				#input()
 				continue
 
-			#print("==>",BaseUrl,action)
+			print("==>",BaseUrl,action)
 			url = urljoin(BaseUrl, action)
 			if url in visited:
 				#print("already visited this ",url)
@@ -55,7 +55,9 @@ def CheckXSS(BaseUrl,depth,DFS):
 			else:
 				visited[url] = 1
 
-			print("\n==> ",url,form)
+			if Verbose:
+				print("\nURL\t",url,"\nForm\t",form,"\nHeaders\t",headers,"\n")
+				
 			global totalInjections,successfulInjections,failedInjections,totalInjectionPoints
 			totalInjectionPoints+=1
 			success=[]
@@ -67,9 +69,9 @@ def CheckXSS(BaseUrl,depth,DFS):
 				#create Data for the Form/Query string
 				totalInjections+=1
 				if form['method'] == 'get' or form['method'] == "" :
-					resp = requests.get(url, params=data)
+					resp = requests.get(url, params=data, headers=headers)
 				elif form['method'] == 'post':
-					resp = requests.post(url, data=data)
+					resp = requests.post(url, data=data, headers=headers)
 
 
 				if payload in resp.text:

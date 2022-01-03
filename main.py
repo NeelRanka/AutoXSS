@@ -1,4 +1,4 @@
-from input import BaseUrls,payloads,Recursive,MaxDepth,Verbose,dynamicApproach
+from input import BaseUrls,payloads,Recursive,MaxDepth,Verbose,dynamicApproach,headers
 
 
 #from BFSApproach import BFS_Static   #level wise approach

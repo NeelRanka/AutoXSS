@@ -15,6 +15,9 @@ URLGroup.add_argument("-UF", "--URLFile", help="file input for multiple URL/Doma
 #adding Payload Args
 parser.add_argument("-PF", "--PayloadFile", help = "Paylods File path", type=str)
 
+# Adding headers
+parser.add_argument("-H", "--header", help = "Adding custom Headers", type=str, nargs='+')
+
 #adding Completeness/Recursive Arguments
 parser.add_argument("-R", "--Recursive", help="to execute ith script Recursively on the Website", action="store_true")
 parser.add_argument("-d", "--depth", help="depth of Recursion", type=int)
@@ -103,3 +106,13 @@ if payloads == []:
 		'<script>alert(1);</script>',
 		'<script>alert(document.cookie);</script>',
 	]
+
+headers = {}
+if args.header:
+	try:
+		for i in args.header:
+			# print(i)
+			headers[i.split(":")[0]] = i.split(":")[1].strip()
+	except:
+		pass
+	print("headers set => ",headers)
